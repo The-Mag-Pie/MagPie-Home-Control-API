@@ -24,6 +24,7 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         context: .
+        file: ./MagPie-Home-Control-API/Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/magpie-home-control-api:latest
 
