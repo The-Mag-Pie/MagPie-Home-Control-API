@@ -1,0 +1,6 @@
+@MagPie_Home_Control_API_HostAddress = http://localhost:5146
+
+GET {{MagPie_Home_Control_API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
