@@ -6,7 +6,9 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/manual_build.yml
+    secrets: inherit
 
   deploy:
     needs: build
     uses: ./.github/workflows/manual_deploy.yml
+    secrets: inherit
