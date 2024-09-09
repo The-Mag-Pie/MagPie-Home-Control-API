@@ -8,4 +8,5 @@ jobs:
     uses: The-Mag-Pie/workflows/.github/workflows/build.yml@main
     with:
       image-name: magpie-home-control-api
+      dockerfile-path: ./MagPie-Home-Control-API/Dockerfile
     secrets: inherit
