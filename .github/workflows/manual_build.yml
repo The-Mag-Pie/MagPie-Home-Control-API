@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    uses: The-Mag-Pie/workflows/build.yml@main
+    uses: The-Mag-Pie/workflows/.github/workflows/build.yml@main
     with:
       image-name: magpie-home-control-api
     secrets: inherit
