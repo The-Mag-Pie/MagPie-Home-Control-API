@@ -33,11 +33,11 @@ namespace MagPie_Home_Control_API.Controllers.CentralHeating.Stove
 
                 if (ewelinkResponse == "on")
                 {
-                    return Ok(new StateResponse(PowerStates.On));
+                    return Ok(new StateResponse(PowerStates.ON));
                 }
                 else if (ewelinkResponse == "off")
                 {
-                    return Ok(new StateResponse(PowerStates.Off));
+                    return Ok(new StateResponse(PowerStates.OFF));
                 }
                 else
                 {
