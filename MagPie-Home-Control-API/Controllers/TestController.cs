@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MagPie_Home_Control_API.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MagPie_Home_Control_API.Controllers
@@ -7,21 +7,22 @@ namespace MagPie_Home_Control_API.Controllers
     [ApiController]
     public class TestController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
-
-        public TestController(IConfiguration configuration)
+        private class ResponseModel
         {
-            _configuration = configuration;
+            public int RandomTestInt { get; set; }
         }
 
         /// <summary>
-        /// Test endpoint
+        /// Check if the server is working
         /// </summary>
-        /// <returns>Test response</returns>
         [HttpGet]
+        [ApiExplorerSettings(GroupName = "Health check")]
         public IActionResult Get()
         {
-            return Ok(_configuration["TEST_ENV"]);
+            return Ok(new ApiResponseBody(true, "SERVER IS WORKING", new
+            {
+                RandomInteger = new Random().Next(-100, 100)
+            }));
         }
     }
 }
