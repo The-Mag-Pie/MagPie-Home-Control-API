@@ -12,6 +12,9 @@ namespace MagPie_Home_Control_API.Controllers.CentralHeating
         private readonly string _ewelinkDeviceId;
         private readonly HttpClient _httpClient;
 
+        private string StateURL => $"{_ewelinkProxyUrl}/state/{_ewelinkDeviceId}";
+        private string ToggleURL => $"{_ewelinkProxyUrl}/toggle/{_ewelinkDeviceId}";
+
         public StateController(IConfiguration configuration, HttpClient httpClient)
         {
             _ewelinkProxyUrl = configuration["EWELINK_PROXY_URL"] ?? throw new EnvironmentVariableMissingException("EWELINK_PROXY_URL");
@@ -28,20 +31,7 @@ namespace MagPie_Home_Control_API.Controllers.CentralHeating
         {
             try
             {
-                var ewelinkResponse = await _httpClient.GetStringAsync($"{_ewelinkProxyUrl}/state/{_ewelinkDeviceId}");
-
-                if (ewelinkResponse == "on")
-                {
-                    return Ok(new StateResponse(PowerStates.ON));
-                }
-                else if (ewelinkResponse == "off")
-                {
-                    return Ok(new StateResponse(PowerStates.OFF));
-                }
-                else
-                {
-                    throw new ServerErrorException($"Invalid response from eWeLink: {ewelinkResponse}");
-                }
+                return Ok(new StateResponse(await GetState()));
             }
             catch (Exception e)
             {
@@ -58,20 +48,46 @@ namespace MagPie_Home_Control_API.Controllers.CentralHeating
         {
             try
             {
-                var ewelinkResponse = await _httpClient.GetStringAsync($"{_ewelinkProxyUrl}/toggle/{_ewelinkDeviceId}");
-
-                if (ewelinkResponse == "OK")
-                {
-                    return Ok(new ApiResponseBody(true, "Stove power state has been toggled."));
-                }
-                else
-                {
-                    throw new ServerErrorException($"Invalid response from eWeLink: {ewelinkResponse}");
-                }
+                return Ok(await ToggleState());
             }
             catch (Exception e)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponseBody(false, e.Message));
+            }
+        }
+
+        private async Task<PowerStates> GetState()
+        {
+            var ewelinkResponse = await _httpClient.GetStringAsync(StateURL);
+
+            if (ewelinkResponse == "on")
+            {
+                return PowerStates.ON;
+            }
+            else if (ewelinkResponse == "off")
+            {
+                return PowerStates.OFF;
+            }
+            else
+            {
+                throw new ServerErrorException($"Invalid response from eWeLink: {ewelinkResponse}");
+            }
+        }
+
+        private async Task<ToggleResponse> ToggleState()
+        {
+            var oldState = await GetState();
+            var ewelinkResponse = await _httpClient.GetStringAsync(ToggleURL);
+
+            if (ewelinkResponse == "OK")
+            {
+                return new (
+                    oldState,
+                    oldState == PowerStates.ON ? PowerStates.OFF : PowerStates.ON);
+            }
+            else
+            {
+                throw new ServerErrorException($"Invalid response from eWeLink: {ewelinkResponse}");
             }
         }
     }
