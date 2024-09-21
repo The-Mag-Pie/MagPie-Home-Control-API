@@ -1,5 +1,4 @@
 ﻿using MagPie_Home_Control_API.Models;
-using Microsoft.AspNetCore.Authorization;
 using System.Text.Json;
 
 namespace MagPie_Home_Control_API.Authorization

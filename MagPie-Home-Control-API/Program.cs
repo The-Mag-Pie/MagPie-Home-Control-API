@@ -1,4 +1,3 @@
-
 using System.Reflection;
 using MagPie_Home_Control_API.Authorization;
 
