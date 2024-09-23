@@ -32,7 +32,7 @@ namespace MagPie_Home_Control_API.Authorization
 
                 var response = new ApiResponseBody(false, "API key not found");
 
-                await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+                await context.Response.WriteAsync(response.ToString());
                 return;
             }
 
@@ -44,7 +44,7 @@ namespace MagPie_Home_Control_API.Authorization
 
                 var response = new ApiResponseBody(false, "Invalid API key");
 
-                await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+                await context.Response.WriteAsync(response.ToString());
                 return;
             }
 
